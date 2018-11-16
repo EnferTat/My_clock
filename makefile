@@ -16,11 +16,11 @@ SRC		=	main.c
 
 OBJ		=	$(SRC:%.c=%.o)
 
-LM		=	-L. -lmy
+LM		=	-L. -lm
 
 CFLAGS 	+=	-W -Werror -Wall
 
-LDFLAGS	+= `sdl-config --cflags --libs` -lSDL -lmy
+LDFLAGS	+= `sdl-config --cflags --libs` -lSDL -lm
 
 all:		$(NAME)
 

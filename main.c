@@ -13,7 +13,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <time.h>
-#include "my.h"
+#include <math.h>
 
 void def_pos_sec(SDL_Rect *position_sec, SDL_Surface *support, SDL_Surface **seconde)
 {
@@ -80,6 +80,7 @@ void def_pos_dec(SDL_Rect *position_dec, SDL_Surface *support, SDL_Surface **dec
 
 int main ()
 {
+  struct timespec ts;
 	time_t timestamp;
     struct tm * t;
 	SDL_Surface *support;
@@ -96,6 +97,10 @@ int main ()
 	SDL_Rect position_dec[4];
 	int continuer = 1;
 	int i;
+
+  ts.tv_sec = 500 / 1000;
+  ts.tv_nsec = (500 % 1000) * 1000000;
+
 
 	SDL_Init(SDL_INIT_VIDEO);
 
@@ -124,6 +129,7 @@ int main ()
 
     while (continuer)
     {
+      nanosleep(&ts, NULL);
     	SDL_PollEvent(&event);
         switch(event.type)
         {
@@ -139,17 +145,17 @@ int main ()
     	t = localtime(&timestamp);
         for (i = 0; i < 6; ++i)
         {
-        	if ((t->tm_sec / (my_power_rec(2, i))) % 2 != 0)
+        	if ((t->tm_sec / (int)(pow(2, (double)i))) % 2 != 0)
 	        	SDL_FillRect(seconde[i], NULL, SDL_MapRGB(seconde[i]->format, 0, 0, 255));
 	        else
 	        	SDL_FillRect(seconde[i], NULL, SDL_MapRGB(seconde[i]->format, 0, 0, 0));
-	        if ((t->tm_min / (my_power_rec(2, i))) % 2 != 0)
+	        if ((t->tm_min / (int)(pow(2, (double)i))) % 2 != 0)
 	        	SDL_FillRect(minute[i], NULL, SDL_MapRGB(minute[i]->format, 255, 0, 0));
 	        else
 	        	SDL_FillRect(minute[i], NULL, SDL_MapRGB(minute[i]->format, 0, 0, 0));
-	        if (t->tm_hour >= 12 && (((t->tm_hour - 12) / (my_power_rec(2, i))) % 2 != 0) && i < 4)
+	        if (t->tm_hour >= 12 && (((t->tm_hour - 12) / (int)(pow(2, (double)i))) % 2 != 0) && i < 4)
 	        	SDL_FillRect(heure[i], NULL, SDL_MapRGB(heure[i]->format, 0, 255, 0));
-	        else if (t->tm_hour < 12 && (((t->tm_hour) / (my_power_rec(2, i))) % 2 != 0) && i < 4)
+	        else if (t->tm_hour < 12 && (((t->tm_hour) / (int)(pow(2, (double)i))) % 2 != 0) && i < 4)
 	        	SDL_FillRect(heure[i], NULL, SDL_MapRGB(heure[i]->format, 0, 255, 0));
 	        else if (i < 4)
 	        	SDL_FillRect(heure[i], NULL, SDL_MapRGB(heure[i]->format, 0, 0, 0));
